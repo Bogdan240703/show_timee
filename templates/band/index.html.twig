@@ -1,22 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello BandController!{% endblock %}
+{% block title %}Band index{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+    <div class="flex justify-center mt-4">
+        <div class="w-[1000px]">
+            <div class="flex items-baseline gap-4 mb-4">
+                <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
+                <h1 class="text-4xl font-bold">All Bands</h1>
+            </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    {% for band in bands %}
-        <div> {{ band.name }}</div>
-    {% endfor %}
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/bogda/Downloads/Show_timee/src/Controller/BandController.php</code></li>
-        <li>Your template at <code>C:/Users/bogda/Downloads/Show_timee/templates/band/index.html.twig</code></li>
-    </ul>
-</div>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Genre</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for band in bands %}
+                        <tr class="hover:bg-base-300">
+                            <td>{{ band.id }}</td>
+                            <td>{{ band.name }}</td>
+                            <td>{{ band.musicGenre.value }}</td>
+                            <td>
+                                <a href="{{ path('app_band_show', {'id': band.id}) }}" class="btn">Show</a>
+                                <a href="{{ path('app_band_edit', {'id': band.id}) }}" class="btn">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-6">
+        <div class="card bg-base-100 w-96 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Create a New Band</h2>
+                <p>You can add a new band to the list by clicking the button below.</p>
+                <div class="card-actions justify-end">
+                    <a href="{{ path('app_band_new') }}" class="btn btn-primary">Create Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}

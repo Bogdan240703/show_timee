@@ -1,0 +1,45 @@
+{{ form_start(form) }}
+<div class="w-xs mx-auto">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend">Festival details</legend>
+
+        <label class="label">Name</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.name, {'attr': {'class': 'input', 'placeholder': 'Enter festival name' }}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <label class="label">Location</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.location, {'attr': {'class': 'input', 'placeholder': 'Enter festival location' }}) }}
+            {{ form_errors(form.location) }}
+        </div>
+        <label class="label">Price</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.price, {'attr': {'class': 'input', 'placeholder': 'Enter festival price' }}) }}
+            {{ form_errors(form.price) }}
+        </div>
+        <label class="label">Start Date</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.startDate, {'attr': {'class': 'input'}}) }}
+            {{ form_errors(form.startDate) }}
+        </div>
+
+        <label class="label">End Date</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.endDate, {'attr': {'class': 'input'}}) }}
+            {{ form_errors(form.endDate) }}
+        </div>
+
+        <label class="label">Bands</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.bands, {'attr': {'class': 'select', 'style': 'height: 80px;'}}) }}
+            {{ form_errors(form.bands) }}
+        </div>
+    </fieldset>
+
+    <div class="flex justify-center gap-4 mt-4">
+        <button class="btn">{{ button_label|default('Save') }}</button>
+        <a href="{{ path('app_festival_index') }}" class="btn btn-info">Back to list</a>
+    </div>
+</div>
+{{ form_end(form) }}

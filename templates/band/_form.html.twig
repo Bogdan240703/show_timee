@@ -1,0 +1,23 @@
+{{ form_start(form) }}
+<div class="w-xs mx-auto">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend">Band details</legend>
+
+        <label class="label">Name</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.name, {'attr': {'class': 'input', 'placeholder': 'Enter band name' }}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <label class="label">Music Genre</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.musicGenre, {'attr': {'class': 'select'}}) }}
+            {{ form_errors(form.musicGenre) }}
+        </div>
+    </fieldset>
+
+    <div class="flex justify-center gap-4 mt-4">
+        <button class="btn">{{ button_label|default('Save') }}</button>
+        <a href="{{ path('app_band_index') }}" class="btn btn-info">Back to list</a>
+    </div>
+</div>
+{{ form_end(form) }}

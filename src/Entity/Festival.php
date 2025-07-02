@@ -40,6 +40,9 @@ class Festival
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'festival')]
     private Collection $bookings;
 
+    #[ORM\Column]
+    private ?int $price = null;
+
     public function __construct()
     {
         $this->bands = new ArrayCollection();
@@ -149,6 +152,18 @@ class Festival
                 $booking->setFestival(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $Price): static
+    {
+        $this->price = $Price;
 
         return $this;
     }
