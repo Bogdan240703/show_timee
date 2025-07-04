@@ -1,5 +1,21 @@
+{% set bands_data = [] %}
+{% for choice in form.bands.vars.choices %}
+    {% set bands_data = bands_data|merge([{'id': choice.value, 'name': choice.label}]) %}
+{% endfor %}
+{% set bands_data_json = bands_data|json_encode %}
+
+{% set selected_bands = [] %}
+{% if form.bands.vars.data %}
+    {% for selectedBand in form.bands.vars.data %}
+        {% set selected_bands = selected_bands|merge([selectedBand.id]) %}
+    {% endfor %}
+{% endif %}
+{% set selected_bands_json = selected_bands|json_encode %}
 {{ form_start(form) }}
-<div class="w-xs mx-auto">
+<div class="w-xs mx-auto"
+     data-controller="band-selector"
+     data-band-selector-bands-data-value="{{ bands_data_json|e('html_attr') }}"
+     data-band-selector-selected-band-ids-value="{{ selected_bands_json|e('html_attr') }}">
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <legend class="fieldset-legend">Festival details</legend>
 
@@ -30,9 +46,40 @@
             {{ form_errors(form.endDate) }}
         </div>
 
+        {#        <label class="label">Bands</label> #}
+        {#        <div class="form-control mb-4"> #}
+        {#            {{ form_widget(form.bands, {'attr': {'class': 'select', 'style': 'height: 80px;'}}) }} #}
+        {#            {{ form_errors(form.bands) }} #}
+        {#        </div> #}
         <label class="label">Bands</label>
         <div class="form-control mb-4">
-            {{ form_widget(form.bands, {'attr': {'class': 'select', 'style': 'height: 80px;'}}) }}
+            <div style="display: none;">
+                {{ form_widget(form.bands) }}
+            </div>
+
+            <button id="bandDropdownButton" type="button"
+                    class="btn btn-outline w-full justify-between"
+                    data-action="click->band-selector#toggleDropdown"
+                    data-band-selector-target="bandDropdownButton">
+                <span>
+                    <span id="selectedBandsText" data-band-selector-target="selectedBandsText">Select Bands</span>
+                </span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div id="bandDropdown"
+                 class="hidden absolute z-50 w-full max-w-xs bg-base-100 rounded-lg shadow-lg border border-base-300 mt-1"
+                 data-band-selector-target="bandDropdown">
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <ul class="p-3 space-y-1 text-sm" id="bandList" data-band-selector-target="bandList">
+                    </ul>
+                </div>
+            </div>
+
+            <div id="hiddenInputs"></div>
+
             {{ form_errors(form.bands) }}
         </div>
     </fieldset>
