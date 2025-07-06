@@ -22,7 +22,7 @@ class FestivalType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'Name nu poate fi gol.']),
                     new Assert\Length(['min' => 2, 'max' => 255, 'minMessage' => 'Minim {{ limit }} caractere.',
-                        'maxMessage' => 'Maxim {{ limit }} caractere.',]),
+                        'maxMessage' => 'Maxim {{ limit }} caractere.', ]),
                 ],
             ])
             ->add('location', TextType::class, ['constraints' => [new Assert\NotBlank(['message' => 'Location nu poate fi gol.']), new Assert\Length([
@@ -30,7 +30,7 @@ class FestivalType extends AbstractType
                 'max' => 255,
                 'minMessage' => 'Locatia trebuie sa aiba cel putin {{ limit }} caractere.',
                 'maxMessage' => 'Locatia nu poate avea mai mult de {{ limit }} caractere.',
-            ]),]])
+            ]), ]])
             ->add('price', IntegerType::class, [
                 'constraints' => [
                     new Assert\NotNull(['message' => 'Pretul este obligatoriu.']),
@@ -45,7 +45,7 @@ class FestivalType extends AbstractType
                         'value' => (new \DateTime())->format('d-m-Y'),
                         'message' => 'Festivalul nu poate începe in trecut.',
                     ]),
-                ]
+                ],
             ])
             ->add('endDate', DateType::class, [
                 'constraints' => [
@@ -58,7 +58,7 @@ class FestivalType extends AbstractType
                         'propertyPath' => 'parent.all[startDate].data',
                         'message' => 'Data de final trebuie sa fie după data de inceput.',
                     ]),
-                ]
+                ],
             ])
             ->add('bands', EntityType::class, [
                 'class' => Band::class,
@@ -69,7 +69,7 @@ class FestivalType extends AbstractType
                         'min' => 1,
                         'minMessage' => 'Trebuie sa selectezi cel putin o trupa.',
                     ]),
-                ]
+                ],
             ]);
     }
 

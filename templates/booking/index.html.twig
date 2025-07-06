@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bookings index{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center mt-4">
+        <div class="w-[1000px]">
+            <div class="flex items-baseline gap-4 mb-4">
+                <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
+                <h1 class="text-4xl font-bold">All Bookings</h1>
+            </div>
+            <div class="mb-6 p-4 bg-base-200 rounded-box shadow-md">
+                <h2 class="text-2xl font-semibold mb-3">Filter Bookings</h2>
+                <form action="{{ path('app_booking_index_admin') }}" method="GET" class="flex gap-4 items-center">
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="festivalName" class="label mb-1">
+                            <span class="label-text">Festival Name</span>
+                        </label>
+                        <input type="text" id="festivalName" name="festivalName" placeholder="Filter by name"
+                               class="input input-bordered w-full" value="{{ filters.festivalName|default('') }}"/>
+                    </div>
+
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="email" class="label mb-1">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="text" id="email" name="email" placeholder="Filter by email"
+                               class="input input-bordered w-full" value="{{ filters.email|default('') }}"/>
+                    </div>
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="fullName" class="label mb-1">
+                            <span class="label-text">Fullname</span>
+                        </label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Filter by fullname"
+                               class="input input-bordered w-full" value="{{ filters.fullName|default('') }}"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label mb-1">
+                            <span class="label-text">Sort By</span>
+                        </label>
+                        <select name="sortField" class="select select-bordered">
+                            <option value="id" {{ filters.sortField == 'id' ? 'selected' }}>ID</option>
+                            <option value="email" {{ filters.sortField == 'email' ? 'selected' }}>Email</option>
+                            <option value="fullname" {{ filters.sortField == 'fullname' ? 'selected' }}>Fullname
+                            </option>
+                            <option value="festival.name" {{ filters.sortField == 'festival.name' ? 'selected' }}>
+                                Festival
+                                Name
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label mb-1">
+                            <span class="label-text">Direction</span>
+                        </label>
+                        <select name="sortDirection" class="select select-bordered">
+                            <option value="asc" {{ filters.sortDirection == 'asc' ? 'selected' }}>Ascending</option>
+                            <option value="desc" {{ filters.sortDirection == 'desc' ? 'selected' }}>Descending</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <button type="submit" class="btn btn-primary whitespace-nowrap">Apply Filters</button>
+                    </div>
+
+                    {% if filters.festivalName or filters.email or filters.fullName %}
+                        <div class="form-control">
+                            <a href="{{ path('app_booking_index_admin') }}" class="btn btn-secondary whitespace-nowrap">Clear
+                                Filters</a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Festival Name</th>
+                        <th>Email</th>
+                        <th>Fullname</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for booking in pagination %}
+                        <tr class="hover:bg-base-300">
+                            <td>{{ booking.id }}</td>
+                            <td>{{ booking.festival.name }}</td>
+                            <td>{{ booking.email }}</td>
+                            <td>{{ booking.fullname }}</td>
+
+                            <td>
+                                <a href="{{ path('app_booking_show_admin', {'id': booking.id}) }}" class="btn">Show</a>
+                                <a href="{{ path('app_booking_edit_admin', {'id': booking.id}) }}" class="btn">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="mt-6">
+                    {{ knp_pagination_render(pagination) }}                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-6">
+        <div class="card bg-base-100 w-96 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Create a New Booking</h2>
+                <p>You can add a new booking to the list by clicking the button below.</p>
+                <div class="card-actions justify-end">
+                    <a href="{{ path('app_booking_new_admin') }}" class="btn btn-primary">Create Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

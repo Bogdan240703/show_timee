@@ -6,6 +6,7 @@ use App\Entity\Festival;
 use App\Form\FestivalType;
 use App\Repository\FestivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +16,33 @@ use Symfony\Component\Routing\Attribute\Route;
 final class FestivalController extends AbstractController
 {
     #[Route(name: 'app_festival_index', methods: ['GET'])]
-    public function index(FestivalRepository $festivalRepository): Response
+    public function index(Request $request, FestivalRepository $festivalRepository, PaginatorInterface $paginator): Response
     {
+        $name = $request->query->get('name');
+        $location = $request->query->get('location');
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
+        $sortField = $request->query->get('sortField');
+        $sortDirection = $request->query->get('sortDirection', 'asc');
+
+        $queryBuilder = $festivalRepository->findByFilters($name, $location, $startDate, $endDate, $sortField, $sortDirection);
+
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            4 // Items per page
+        );
         return $this->render('festival/index.html.twig', [
-            'festivals' => $festivalRepository->findAll(),
+            'pagination' => $pagination,
+            'filters' => [
+                'name' => $name,
+                'location' => $location,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'sortField' => $sortField,
+                'sortDirection' => $sortDirection,
+            ]
         ]);
     }
 

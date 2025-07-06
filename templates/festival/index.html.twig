@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Festival index{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center mt-4">
+        <div class="w-[1200px]">
+            <div class="flex items-baseline gap-4 mb-4">
+                <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
+                <h1 class="text-4xl font-bold">All Festivals</h1>
+            </div>
+            <div class="mb-6 p-4 bg-base-200 rounded-box shadow-md">
+                <h2 class="text-2xl font-semibold mb-3">Filter Festivals</h2>
+                <form action="{{ path('app_festival_index') }}" method="GET" class="flex gap-4 items-center">
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="name" class="label mb-1">
+                            <span class="label-text">Festival Name</span>
+                        </label>
+                        <input type="text" id="name" name="name" placeholder="Filter by name"
+                               class="input input-bordered w-full" value="{{ filters.name|default('') }}"/>
+                    </div>
+
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="location" class="label mb-1">
+                            <span class="label-text">Location</span>
+                        </label>
+                        <input type="text" id="location" name="location" placeholder="Filter by location"
+                               class="input input-bordered w-full" value="{{ filters.location|default('') }}"/>
+                    </div>
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="startDate" class="label mb-1">
+                            <span class="label-text">Start Date</span>
+                        </label>
+                        <input type="date" id="startDate" name="startDate" placeholder="Filter by start date"
+                               class="input input-bordered w-full" value="{{ filters.startDate|default('') }}"/>
+                    </div>
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="endDate" class="label mb-1">
+                            <span class="label-text">End Date</span>
+                        </label>
+                        <input type="date" id="endDate" name="endDate" placeholder="Filter by end date"
+                               class="input input-bordered w-full" value="{{ filters.endDate|default('') }}"/>
+                    </div>
+                    <div class="form-control">
+                        <label for="sortField" class="label mb-1">
+                            <span class="label-text">Sort By</span>
+                        </label>
+                        <select name="sortField" id="sortField" class="select select-bordered">
+                            <option value="">Default</option>
+                            <option value="id" {% if filters.sortField == 'id' %}selected{% endif %}>Id</option>
+                            <option value="name" {% if filters.sortField == 'name' %}selected{% endif %}>Name</option>
+                            <option value="location" {% if filters.sortField == 'location' %}selected{% endif %}>
+                                Location
+                            </option>
+                            <option value="price" {% if filters.sortField == 'price' %}selected{% endif %}>Price
+                            </option>
+                            <option value="startDate" {% if filters.sortField == 'startDate' %}selected{% endif %}>Start
+                                Date
+                            </option>
+                            <option value="endDate" {% if filters.sortField == 'endDate' %}selected{% endif %}>End
+                                Date
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label for="sortDirection" class="label mb-1">
+                            <span class="label-text">Direction</span>
+                        </label>
+                        <select name="sortDirection" id="sortDirection" class="select select-bordered">
+                            <option value="asc" {% if filters.sortDirection == 'asc' %}selected{% endif %}>Ascending
+                            </option>
+                            <option value="desc" {% if filters.sortDirection == 'desc' %}selected{% endif %}>
+                                Descending
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <button type="submit" class="btn btn-primary whitespace-nowrap">Apply Filters</button>
+                    </div>
+
+                    {% if filters.name or filters.location or filters.startDate or filters.endDate %}
+                        <div class="form-control">
+                            <a href="{{ path('app_festival_index') }}" class="btn btn-secondary whitespace-nowrap">Clear
+                                Filters</a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Price</th>
+                        <th>Start_Date</th>
+                        <th>End_Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for festival in pagination %}
+                        <tr class="hover:bg-base-300">
+                            <td>{{ festival.id }}</td>
+                            <td>{{ festival.name }}</td>
+                            <td>{{ festival.location }}</td>
+                            <td>{{ festival.price }}$</td>
+                            <td>{{ festival.startDate|date('Y-m-d') }}</td>
+                            <td>{{ festival.endDate |date('Y-m-d') }}</td>
+
+                            <td>
+                                <a href="{{ path('app_festival_show', {'id': festival.id}) }}" class="btn">Show</a>
+                                <a href="{{ path('app_festival_edit', {'id': festival.id}) }}" class="btn">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="mt-6">
+                    {{ knp_pagination_render(pagination) }}                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-6">
+        <div class="card bg-base-100 w-96 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Create a New Festival</h2>
+                <p>You can add a new festival to the list by clicking the button below.</p>
+                <div class="card-actions justify-end">
+                    <a href="{{ path('app_festival_new') }}" class="btn btn-primary">Create Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base_booking.html.twig' %}
+
+{% block title %}Booking page{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center mt-4">
+        <div class="w-[1000px]">
+            <div class="flex items-baseline gap-4 mb-4">
+                <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
+                <h1 class="text-4xl font-bold">All available festivals!</h1>
+            </div>
+
+            <div class="overflow-x-auto">
+                {% for festival in festivals %}
+                    <div tabindex="{{ festival.id }}" class="collapse collapse-arrow bg-base-100 border-base-300 border mt-5
+                ">
+                        <div class="collapse-title font-bold">
+                            <div class="collapse-title font-bold flex items-center justify-between">
+                                <div>
+                                    <h1 class="text-2xl font-bold">Festival: {{ festival.name }}</h1>
+                                    <h1 class="text-xl font-bold">Location: {{ festival.location }}</h1>
+                                </div>
+                                <div class="flex items-center justify-between ">
+                                    <h1 class="text-l font-normal">Start Date: {{ festival.startDate|date('d-m-y') }}
+                                        ---
+                                        End
+                                        Date: {{ festival.endDate|date('d-m-y') }}</h1>
+                                </div>
+                                <a href="{{ path('app_booking_new', {'festivalId': festival.id}) }}"
+                                   class="btn btn-accent">Get
+                                    ticket</a>
+                            </div>
+                        </div>
+                        <div class="collapse-content text-sm">
+                            <ul class="list bg-base-100 rounded-box shadow-md">
+
+                                <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Coming artists to the festival:
+                                </li>
+                                {% set nr = 1 %}
+                                {% for band in festival.bands %}
+                                    <li class="list-row">
+                                        <div class="text-4xl font-thin opacity-30 tabular-nums">
+                                            {% if nr<10 %}
+                                                0{{ nr }}
+                                            {% else %}
+                                                {{ nr }}
+                                            {% endif %}
+
+                                        </div>
+                                        <div>
+                                            {% if band.picture %}
+                                                <img class="size-10 rounded-box"
+                                                     src="{{ asset(band.picture) }}"
+                                                     alt="Nu avem poza"
+                                                     class="w-24 h-24 object-cover rounded">
+                                            {% else %}
+                                                <img class="size-10 rounded-box"
+                                                     src="https://img.daisyui.com/images/profile/demo/1@94.webp"/>
+                                            {% endif %}
+                                        </div>
+                                        <div class="list-col-grow">
+                                            <div>Name: {{ band.name }}</div>
+                                            <div
+                                                class="text-xs uppercase font-semibold opacity-60">
+                                                Genre: {{ band.musicGenre.value }}
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                    {% set nr = nr+1 %}
+                                {% endfor %}
+
+
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

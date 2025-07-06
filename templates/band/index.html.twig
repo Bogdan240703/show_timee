@@ -8,20 +8,83 @@
             <div class="flex items-baseline gap-4 mb-4">
                 <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
                 <h1 class="text-4xl font-bold">All Bands</h1>
+
+            </div>
+            <div class="mb-6 p-4 bg-base-200 rounded-box shadow-md">
+                <h2 class="text-2xl font-semibold mb-3">Filter Bands</h2>
+                <form action="{{ path('app_band_index') }}" method="GET" class="flex gap-4 items-center">
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="name" class="label mb-1">
+                            <span class="label-text">Band Name</span>
+                        </label>
+                        <input type="text" id="name" name="name" placeholder="Filter by name"
+                               class="input input-bordered w-full" value="{{ filters.name|default('') }}"/>
+                    </div>
+
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="genre" class="label mb-1">
+                            <span class="label-text">Genre</span>
+                        </label>
+                        <select id="genre" name="genre" class="select select-bordered w-full">
+                            <option value="">All Genres</option>
+                            {% for availableGenre in allGenres|default([]) %}
+                                <option value="{{ availableGenre }}"
+                                        {% if filters.genre == availableGenre %}selected{% endif %}>
+                                    {{ availableGenre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label for="sortField" class="label mb-1">
+                            <span class="label-text">Sort By</span>
+                        </label>
+                        <select name="sortField" id="sortField" class="select select-bordered">
+                            <option value="">Default</option>
+                            <option value="id" {% if filters.sortField == 'id' %}selected{% endif %}>Id</option>
+                            <option value="name" {% if filters.sortField == 'name' %}selected{% endif %}>Name</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label for="sortDirection" class="label mb-1">
+                            <span class="label-text">Direction</span>
+                        </label>
+                        <select name="sortDirection" id="sortDirection" class="select select-bordered">
+                            <option value="asc" {% if filters.sortDirection == 'asc' %}selected{% endif %}>Ascending
+                            </option>
+                            <option value="desc" {% if filters.sortDirection == 'desc' %}selected{% endif %}>
+                                Descending
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <button type="submit" class="btn btn-primary whitespace-nowrap">Apply Filters</button>
+                    </div>
+
+                    {% if filters.name or filters.genre %}
+                        <div class="form-control">
+                            <a href="{{ path('app_band_index') }}" class="btn btn-secondary whitespace-nowrap">Clear
+                                Filters</a>
+                        </div>
+                    {% endif %}
+                </form>
             </div>
 
+
             <div class="overflow-x-auto">
+
                 <table class="table w-full">
                     <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Id', 'b.id') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Name', 'b.name') }}</th>
                         <th>Genre</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for band in bands %}
+                    {% for band in pagination %}
                         <tr class="hover:bg-base-300">
                             <td>{{ band.id }}</td>
                             <td>{{ band.name }}</td>
@@ -38,6 +101,8 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                <div class="mt-6">
+                    {{ knp_pagination_render(pagination) }}                </div>
             </div>
         </div>
     </div>

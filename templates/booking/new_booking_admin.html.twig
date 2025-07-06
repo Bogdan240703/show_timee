@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Booking{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center pb-50">
+        <div class="card bg-base-100 w-96 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Create a new booking!</h2>
+                {{ include('booking/_form_admin.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

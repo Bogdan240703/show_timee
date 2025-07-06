@@ -13,6 +13,11 @@
             {{ form_widget(form.musicGenre, {'attr': {'class': 'select'}}) }}
             {{ form_errors(form.musicGenre) }}
         </div>
+        <label class="label">Band Picture</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.picture, {'attr': {'class': 'file-input file-input-bordered'}}) }}
+            {{ form_errors(form.picture) }}
+        </div>
     </fieldset>
 
     <div class="flex justify-center gap-4 mt-4">

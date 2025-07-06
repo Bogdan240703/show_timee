@@ -1,0 +1,31 @@
+{{ form_start(form) }}
+<div class="w-xs mx-auto">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend">Booking details</legend>
+
+        <label class="label">Email</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.email, {'attr': {'class': 'input', 'placeholder': 'Enter email address'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <label class="label">Full Name</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.fullname, {'attr': {'class': 'input', 'placeholder': 'Enter full name'}}) }}
+            {{ form_errors(form.fullname) }}
+        </div>
+        <label class="label">Festivals</label>
+        <div class="form-control mb-4">
+            {{ form_widget(form.festival, {'attr': {'class': 'select', 'style': 'height: 30px;'}}) }}
+            {{ form_errors(form.festival) }}
+        </div>
+
+    </fieldset>
+
+    <div class="flex justify-center gap-4 mt-4">
+        <a href="{{ path('app_booking_index_admin') }}" class="btn btn-info">Back to list</a>
+
+        <button class="btn btn-primary">{{ button_label|default('Save Booking') }}</button>
+    </div>
+</div>
+{{ form_end(form) }}

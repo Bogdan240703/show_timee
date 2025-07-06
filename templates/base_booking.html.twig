@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="retro">
+<html data-theme="lemonade">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -19,7 +19,7 @@
     <div class="drawer-content">
         <div class="navbar bg-base-200 shadow-sm relative">
             <div class="flex-1">
-                <label for="my-drawer" class="btn btn-ghost text-xl">☰ Menu</label>
+                <label for="my-drawer" class="btn btn-ghost text-xl">Log in</label>
             </div>
 
             <div class="absolute left-1/2 transform -translate-x-1/2">
@@ -47,12 +47,15 @@
         <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
             <li><a href="{{ path('app_band_index') }}">Bands</a></li>
             <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
-            <li><a href="{{ path('app_booking_index_admin') }}">Bookings</a></li>
+            <li><a href="{{ path('app_band_index') }}">Bookings (TODO)</a></li>
         </ul>
     </div>
 </div>
 
-
 </body>
-
+<footer class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
+    <aside>
+        <p>Copyright © ShowTime 2025 - All rights reserved.</p>
+    </aside>
+</footer>
 </html>

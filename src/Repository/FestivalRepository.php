@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Festival;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,4 +41,44 @@ class FestivalRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByFilters(?string $name, ?string $location, ?string $startDate, ?string $endDate, ?string $sortField, string $sortDirection): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if ($name) {
+            $qb->andWhere('f.name LIKE :name')
+                ->setParameter('name', '%' . $name . '%');
+        }
+
+        if ($location) {
+            $qb->andWhere('f.location LIKE :location')
+                ->setParameter('location', '%' . $location . '%');
+        }
+
+        if ($startDate) {
+            try {
+                $startDateObj = new \DateTime($startDate);
+                $qb->andWhere('f.startDate >= :startDate')
+                    ->setParameter('startDate', $startDateObj);
+            } catch (\Exception $e) {
+                // handle invalid date if necessary
+            }
+        }
+
+        if ($endDate) {
+            try {
+                $endDateObj = new \DateTime($endDate);
+                $qb->andWhere('f.endDate <= :endDate')
+                    ->setParameter('endDate', $endDateObj);
+            } catch (\Exception $e) {
+                // handle invalid date if necessary
+            }
+        }
+        $allowedFields = ['id', 'name', 'location', 'price', 'startDate', 'endDate'];
+        if (in_array($sortField, $allowedFields)) {
+            $qb->orderBy('f.' . $sortField, strtoupper($sortDirection) === 'DESC' ? 'DESC' : 'ASC');
+        }
+
+        return $qb;
+    }
 }

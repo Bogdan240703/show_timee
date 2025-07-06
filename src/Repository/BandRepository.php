@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Band;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,4 +41,24 @@ class BandRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByFilters(?string $name, ?string $genre, ?string $sortField, string $sortDirection): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        if ($name) {
+            $qb->andWhere('LOWER(b.name) LIKE :name')
+                ->setParameter('name', '%' . strtolower($name) . '%');
+        }
+
+        if ($genre) {
+            $qb->andWhere('b.musicGenre = :genre')
+                ->setParameter('genre', $genre);
+        }
+        $allowedFields = ['id', 'name'];
+        if (in_array($sortField, $allowedFields)) {
+            $qb->orderBy('b.' . $sortField, strtoupper($sortDirection) === 'DESC' ? 'DESC' : 'ASC');
+        }
+        return $qb;
+    }
+
 }

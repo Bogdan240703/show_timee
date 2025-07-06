@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BandRepository::class)]
 class Band
 {
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -85,6 +87,18 @@ class Band
         if ($this->festivals->removeElement($festival)) {
             $festival->removeBand($this);
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
 
         return $this;
     }

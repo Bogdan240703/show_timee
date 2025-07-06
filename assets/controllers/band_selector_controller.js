@@ -2,7 +2,7 @@
 import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ["bandDropdownButton", "bandDropdown", "bandList", "selectedBandsText"];
+    static targets = ["bandDropdownButton", "bandDropdown", "bandList", "selectedBandsText", "searchInput"];
     static values = {
         bandsData: Array,
         selectedBandIds: Array
@@ -98,6 +98,16 @@ export default class extends Controller {
         }
     }
 
+    filterBands() {
+        const searchTerm = this.searchInputTarget.value.toLowerCase();
+
+        const bandItems = this.bandListTarget.querySelectorAll("li");
+        bandItems.forEach(item => {
+            const label = item.textContent.toLowerCase();
+            item.style.display = label.includes(searchTerm) ? "block" : "none";
+        });
+    }
+
     updateOriginalSelect() {
         if (this.originalSelect) {
             Array.from(this.originalSelect.options).forEach(option => {
@@ -113,3 +123,5 @@ export default class extends Controller {
         }
     }
 }
+
+

@@ -1,0 +1,17 @@
+{% extends 'base_booking.html.twig' %}
+
+{% block title %}New Reservation{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center pb-50">
+        <div class="card bg-base-150 w-120 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Enter details to complete reservation for {{ booking.festival.name }}!</h2>
+                {{ include('booking/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

@@ -72,6 +72,13 @@
             <div id="bandDropdown"
                  class="hidden absolute z-50 w-full max-w-xs bg-base-100 rounded-lg shadow-lg border border-base-300 mt-1"
                  data-band-selector-target="bandDropdown">
+                <div class="p-2 border-b border-base-300">
+                    <input type="text"
+                           placeholder="Search bands..."
+                           class="input input-sm w-full"
+                           data-band-selector-target="searchInput"
+                           data-action="input->band-selector#filterBands">
+                </div>
                 <div style="max-height: 200px; overflow-y: auto;">
                     <ul class="p-3 space-y-1 text-sm" id="bandList" data-band-selector-target="bandList">
                     </ul>
