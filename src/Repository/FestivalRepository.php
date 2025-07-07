@@ -61,7 +61,6 @@ class FestivalRepository extends ServiceEntityRepository
                 $qb->andWhere('f.startDate >= :startDate')
                     ->setParameter('startDate', $startDateObj);
             } catch (\Exception $e) {
-                // handle invalid date if necessary
             }
         }
 
@@ -71,7 +70,6 @@ class FestivalRepository extends ServiceEntityRepository
                 $qb->andWhere('f.endDate <= :endDate')
                     ->setParameter('endDate', $endDateObj);
             } catch (\Exception $e) {
-                // handle invalid date if necessary
             }
         }
         $allowedFields = ['id', 'name', 'location', 'price', 'startDate', 'endDate'];

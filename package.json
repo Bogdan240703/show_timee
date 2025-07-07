@@ -1,0 +1,27 @@
+{
+  "name": "show_timee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bogdan240703/show_timee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Bogdan240703/show_timee/issues"
+  },
+  "homepage": "https://github.com/Bogdan240703/show_timee#readme",
+  "devDependencies": {
+    "daisyui": "^5.0.43"
+  }
+}
