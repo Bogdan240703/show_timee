@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="min-h-[calc(100vh-20rem)] flex justify-center items-center">
+        {{ form_start(registrationForm) }}
+        <div class="ml-17">
+            <img src="{{ asset('images/user_png.png') }}" width="180" height="120" alt="Logo">
+        </div>
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <legend class="fieldset-legend text-lg font-bold mb-2">Sign Up</legend>
+
+            <label class="label">Email</label>
+            {{ form_widget(registrationForm.email, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            <label class="label">Username</label>
+            {{ form_widget(registrationForm.username, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            <label class="label mt-4">Age</label>
+            {{ form_widget(registrationForm.age, {'attr': {'class': 'input input-bordered w-full'}}) }}
+
+            <label class="label mt-4">Password</label>
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input input-bordered w-full'}}) }}
+
+            <button class="btn btn-neutral w-full mt-6" type="submit">
+                Sign up
+            </button>
+        </fieldset>
+        <h1 class="mt-4 ml-12 text-centre">Already have an account? <a class="link link-accent"
+                                                                       href="{{ path('app_login') }}">Log in</a></h1>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

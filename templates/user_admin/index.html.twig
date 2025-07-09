@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users index{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center mt-4">
+        <div class="w-[1200px]">
+            <div class="flex items-baseline gap-4 mb-4">
+                <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
+                <h1 class="text-4xl font-bold">All Users</h1>
+            </div>
+
+            <div class="mb-6 p-4 bg-base-200 rounded-box shadow-md">
+                <h2 class="text-2xl font-semibold mb-3">Filter Users</h2>
+                <form action="{{ path('app_user_index') }}" method="GET" class="flex gap-4 flex-wrap">
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="username" class="label mb-1">
+                            <span class="label-text">Username</span>
+                        </label>
+                        <input type="text" id="username" name="username" placeholder="Filter by username"
+                               class="input input-bordered w-full" value="{{ filters.username|default('') }}"/>
+                    </div>
+
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="email" class="label mb-1">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="text" id="email" name="email" placeholder="Filter by email"
+                               class="input input-bordered w-full" value="{{ filters.email|default('') }}"/>
+                    </div>
+
+                    <div class="form-control flex-1 min-w-0">
+                        <label for="age" class="label mb-1">
+                            <span class="label-text">Age</span>
+                        </label>
+                        <input type="number" id="age" name="age" placeholder="Filter by age"
+                               class="input input-bordered w-full" value="{{ filters.age|default('') }}"/>
+                    </div>
+
+                    <div class="form-control">
+                        <label for="sortField" class="label mb-1">
+                            <span class="label-text">Sort By</span>
+                        </label>
+                        <select name="sortField" id="sortField" class="select select-bordered">
+                            <option value="">Default</option>
+                            <option value="id" {% if filters.sortField == 'id' %}selected{% endif %}>Id</option>
+                            <option value="username" {% if filters.sortField == 'username' %}selected{% endif %}>
+                                Username
+                            </option>
+                            <option value="email" {% if filters.sortField == 'email' %}selected{% endif %}>Email
+                            </option>
+                            <option value="age" {% if filters.sortField == 'age' %}selected{% endif %}>Age</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label for="sortDirection" class="label mb-1">
+                            <span class="label-text">Direction</span>
+                        </label>
+                        <select name="sortDirection" id="sortDirection" class="select select-bordered">
+                            <option value="asc" {% if filters.sortDirection == 'asc' %}selected{% endif %}>Ascending
+                            </option>
+                            <option value="desc" {% if filters.sortDirection == 'desc' %}selected{% endif %}>
+                                Descending
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label mb-1"><span class="label-text invisible">.</span></label>
+                        <button type="submit" class="btn btn-primary whitespace-nowrap">Apply Filters</button>
+                    </div>
+
+                    {% if filters.username or filters.email or filters.age %}
+                        <div class="form-control">
+                            <label class="label mb-1"><span class="label-text invisible">.</span></label>
+                            <a href="{{ path('app_user_index') }}" class="btn btn-secondary whitespace-nowrap">Clear
+                                Filters</a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in pagination %}
+                        <tr class="hover:bg-base-300">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.age }}</td>
+                            <td>
+                                <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn">Show</a>
+                                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mt-6">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-6">
+                <div class="card bg-base-100 w-96 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title">Create a New Admin Role User</h2>
+                        <p>You can add a new user to the list by clicking the button below.</p>
+                        <div class="card-actions justify-end">
+                            <a href="{{ path('app_user_new') }}" class="btn btn-primary">Create Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

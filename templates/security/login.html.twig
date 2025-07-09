@@ -1,0 +1,56 @@
+{% extends 'base_booking.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block content %}
+    <div class="min-h-[calc(100vh-20rem)] flex justify-center items-center">
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-error mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3 text-center">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}"
+                                                                           class="link link-primary">Logout</a>
+                </div>
+            {% endif %}
+            <div class="ml-17">
+                <img src="{{ asset('images/user_png.png') }}" width="180" height="120" alt="Logo"></div>
+            <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+                <legend class="fieldset-legend text-lg font-bold mb-2">Login</legend>
+
+                <label for="username" class="label">Email</label>
+                <input type="email"
+                       value="{{ last_username }}"
+                       name="_username"
+                       id="username"
+                       class="input input-bordered w-full"
+                       placeholder="Email"
+                       autocomplete="email"
+                       required
+                       autofocus>
+
+                <label for="password" class="label mt-4">Password</label>
+                <input type="password"
+                       name="_password"
+                       id="password"
+                       class="input input-bordered w-full"
+                       placeholder="Password"
+                       autocomplete="current-password"
+                       required>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('auth_token') }}">
+
+                <button class="btn btn-neutral w-full mt-6" type="submit">
+                    Sign in
+                </button>
+            </fieldset>
+            <h1 class="mt-4 ml-5 text-centre">Or don`t have an account yet? <a class="link link-accent"
+                                                                               href="{{ path('app_register' ) }}">Sign
+                    up!</a>
+            </h1>
+        </form>
+
+    </div>
+{% endblock %}

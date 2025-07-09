@@ -12,50 +12,66 @@
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
-<body>
-<div class="drawer drawer-mobile">
-    <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
+<body class="min-h-screen flex flex-col">
+<div class="flex-grow">
+    <div class="drawer drawer-mobile">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
 
-    <div class="drawer-content">
-        <div class="navbar bg-base-200 shadow-sm relative">
-            <div class="flex-1">
-                <label for="my-drawer" class="btn btn-ghost text-xl">Log in</label>
+        <div class="drawer-content">
+            <div class="navbar bg-base-200 shadow-sm relative">
+                <div class="flex-1">
+                    <label for="my-drawer"
+                           class="btn btn-ghost text-xl">{% if app.user %} ☰ Menu {% else %}Log in {% endif %}</label>
+                </div>
+
+                <div class="absolute left-1/2 transform -translate-x-1/2">
+                    <img src="{{ asset('images/logo2.png') }}" width="180" height="120" alt="Logo">
+                </div>
+                {% if app.user %}
+                    <div class="flex-none mr-3 tooltip tooltip-left" data-tip="See wishlist!">
+                        <button class="btn btn-square btn-ghost">
+                            {#                            <span class="text-sm font-semibold">Favourites</span> #}
+                            <a href="{{ path('app_wishlist_page') }}">
+                                <img src="{{ asset('images/favourites.png') }}" class="inline-block h-10 w-10"
+                                     alt="Favourites icon">
+                            </a>
+                        </button>
+                    </div>
+                {% endif %}
             </div>
 
-            <div class="absolute left-1/2 transform -translate-x-1/2">
-                <img src="{{ asset('images/logo2.png') }}" width="180" height="120" alt="Logo">
-            </div>
-
-            <div class="flex-none">
-                <button class="btn btn-square btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                         class="inline-block h-5 w-5 stroke-current">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
-                    </svg>
-                </button>
+            <div class="p-4">
+                {% block content %}{% endblock %}
             </div>
         </div>
 
-        <div class="p-4">
-            {% block content %}{% endblock %}
+        <div class="drawer-side z-40">
+            <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+            <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                {% if app.user %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path('app_band_index') }}">Bands</a></li>
+                        <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
+                        <li><a href="{{ path('app_booking_index_admin') }}">Bookings</a></li>
+                        <li><a href="{{ path('app_user_index') }}">Users</a></li>
+                    {% endif %}
+                {% endif %}
+                <li><a href="{{ path('app_booking_index') }}">Home Page</a></li>
+                {% if not app.user %}
+                    <li><a href="{{ path('app_register') }}">Register</a></li>
+                {% endif %}
+                {% if app.user %}
+                    <li><a href="{{ path('app_logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
         </div>
-    </div>
-
-    <div class="drawer-side z-40">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            <li><a href="{{ path('app_band_index') }}">Bands</a></li>
-            <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
-            <li><a href="{{ path('app_band_index') }}">Bookings (TODO)</a></li>
-        </ul>
     </div>
 </div>
-
-</body>
 <footer class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
     <aside>
         <p>Copyright © ShowTime 2025 - All rights reserved.</p>
     </aside>
 </footer>
+</body>
+
 </html>

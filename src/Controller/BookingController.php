@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Festival;
+use App\Entity\User;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use App\Repository\FestivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,6 +25,55 @@ final class BookingController extends AbstractController
             'bookings' => $bookingRepository->findAll(),
             'festivals' => $festivalRepository->findAll(),
         ]);
+    }
+
+    #[Route('/booking/wishlist', name: 'app_wishlist_page', methods: ['GET'])]
+    public function wishlist(BookingRepository $bookingRepository, FestivalRepository $festivalRepository): Response
+    {
+        return $this->render('booking/wishlist_page.html.twig', [
+            'bookings' => $bookingRepository->findAll(),
+            'festivals' => $festivalRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/booking/wishlist/toggle/{id}', name: 'app_wishlist_toggle')]
+    public function toggleWishlist(Festival $festival, EntityManagerInterface $em, Security $security): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($user->getWishlist()->contains($festival)) {
+            $user->removeFestivalFromWishlist($festival);
+        } else {
+            $user->addFestivalToWishlist($festival);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('app_booking_index');
+    }
+
+    #[Route('/booking/wishlist/page/toggle/{id}', name: 'app_wishlist_page_toggle')]
+    public function toggleWishlistPage(Festival $festival, EntityManagerInterface $em, Security $security): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($user->getWishlist()->contains($festival)) {
+            $user->removeFestivalFromWishlist($festival);
+        } else {
+            $user->addFestivalToWishlist($festival);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('app_wishlist_page');
     }
 
     #[Route('/admin/booking', name: 'app_booking_index_admin', methods: ['GET'])]

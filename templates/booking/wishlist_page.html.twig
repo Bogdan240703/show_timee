@@ -1,17 +1,17 @@
 {% extends 'base_booking.html.twig' %}
 
-{% block title %}Booking page{% endblock %}
+{% block title %}Wishlist page{% endblock %}
 
 {% block content %}
     <div class="flex justify-center mt-4">
         <div class="w-[1000px]">
             <div class="flex items-baseline gap-4 mb-4">
                 <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
-                <h1 class="text-4xl font-bold">All available festivals!</h1>
+                <h1 class="text-4xl font-bold">This is your wishlist!</h1>
             </div>
 
             <div class="overflow-x-auto">
-                {% for festival in festivals %}
+                {% for festival in app.user.wishlist %}
                     <div tabindex="{{ festival.id }}" class="collapse collapse-arrow bg-base-100 border-base-300 border mt-5
                 ">
                         <div class="collapse-title font-bold">
@@ -19,6 +19,7 @@
                                 <div>
                                     <h1 class="text-2xl font-bold">Festival: {{ festival.name }}</h1>
                                     <h1 class="text-xl font-bold">Location: {{ festival.location }}</h1>
+                                    <h1 class="text-lg font-semibold text-accent">Price: {{ festival.price }}$</h1>
                                 </div>
                                 <div class="flex items-center justify-between ">
                                     <h1 class="text-l font-normal">Start Date: {{ festival.startDate|date('d-m-y') }}
@@ -33,7 +34,7 @@
                                     {% if app.user %}
                                         {% if festival in app.user.wishlist %}
                                             <div class="flex ml-5">
-                                                <a href="{{ path('app_wishlist_toggle', {'id': festival.id}) }}">
+                                                <a href="{{ path('app_wishlist_page_toggle', {'id': festival.id}) }}">
                                                     <img src="{{ asset('images/heart_full.png') }}"
                                                          class="h-10 w-10 cursor-pointer transition-transform duration-200 hover:scale-110"
                                                          alt="Favourites icon">
@@ -41,7 +42,7 @@
                                             </div>
                                         {% else %}
                                             <div class="flex ml-5">
-                                                <a href="{{ path('app_wishlist_toggle', {'id': festival.id}) }}">
+                                                <a href="{{ path('app_wishlist_page_toggle', {'id': festival.id}) }}">
                                                     <img src="{{ asset('images/favourites.png') }}"
                                                          class="h-10 w-10 cursor-pointer transition-transform duration-200 hover:scale-110 hover:brightness-90"
                                                          alt="Favourites icon">

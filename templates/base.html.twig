@@ -45,9 +45,21 @@
     <div class="drawer-side z-40">
         <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            <li><a href="{{ path('app_band_index') }}">Bands</a></li>
-            <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
-            <li><a href="{{ path('app_booking_index_admin') }}">Bookings</a></li>
+            {% if app.user %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('app_band_index') }}">Bands</a></li>
+                    <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
+                    <li><a href="{{ path('app_booking_index_admin') }}">Bookings</a></li>
+                    <li><a href="{{ path('app_user_index') }}">Users</a></li>
+                {% endif %}
+            {% endif %}
+            <li><a href="{{ path('app_booking_index') }}">Home Page</a></li>
+            {% if not app.user %}
+                <li><a href="{{ path('app_register') }}">Register</a></li>
+            {% endif %}
+            {% if app.user %}
+                <li><a href="{{ path('app_logout') }}">Logout</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>
