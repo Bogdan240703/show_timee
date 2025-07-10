@@ -64,7 +64,7 @@ class BookingRepository extends ServiceEntityRepository
         }
         $allowedFields = ['id', 'email', 'fullname'];
         if (in_array($sortField, $allowedFields)) {
-            $qb->orderBy('f.' . $sortField, 'DESC' === strtoupper($sortDirection) ? 'DESC' : 'ASC');
+            $qb->orderBy('b.' . $sortField, 'DESC' === strtoupper($sortDirection) ? 'DESC' : 'ASC');
         }
 
         return $qb;

@@ -37,6 +37,16 @@
                             </a>
                         </button>
                     </div>
+                {% elseif not app.user %}
+                    <div class="flex-none mr-3 tooltip tooltip-left" data-tip="You need an account first!">
+                        <button class="btn btn-square btn-ghost">
+                            {#                            <span class="text-sm font-semibold">Favourites</span> #}
+                            <a href="#">
+                                <img src="{{ asset('images/favourites.png') }}" class="inline-block h-10 w-10"
+                                     alt="Favourites icon">
+                            </a>
+                        </button>
+                    </div>
                 {% endif %}
             </div>
 
