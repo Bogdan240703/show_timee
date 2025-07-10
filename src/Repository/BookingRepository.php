@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -63,10 +64,50 @@ class BookingRepository extends ServiceEntityRepository
         }
         $allowedFields = ['id', 'email', 'fullname'];
         if (in_array($sortField, $allowedFields)) {
-            $qb->orderBy('f.' . $sortField, strtoupper($sortDirection) === 'DESC' ? 'DESC' : 'ASC');
+            $qb->orderBy('f.' . $sortField, 'DESC' === strtoupper($sortDirection) ? 'DESC' : 'ASC');
         }
+
         return $qb;
-//        return $qb->getQuery()->getResult();
+        //        return $qb->getQuery()->getResult();
     }
 
+    public function countBookingsForFestivalId(?int $festivalId): int
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.festival', 'f')
+            ->addSelect('f');
+        if (null !== $festivalId) {
+            $qb->andWhere('f.id = :festivalId')
+                ->setParameter('festivalId', $festivalId);
+        }
+        $qb->select('COUNT(b.id)');
+
+        return (int)$qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getAgesPerBooking(?int $festivalId): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->select('u.age')
+            ->leftJoin('b.festival', 'f')
+            ->innerJoin('b.user', 'u')
+            ->andWhere('u.age IS NOT NULL')
+            ->andWhere('b.user IS NOT NULL');
+
+        if (null !== $festivalId) {
+            $qb->andWhere('f.id = :festivalId')
+                ->setParameter('festivalId', $festivalId);
+        }
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

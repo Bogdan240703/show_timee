@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/admin')]
 final class UserAdminController extends AbstractController
 {
     #[Route('/user', name: 'app_user_index')]
@@ -22,7 +23,7 @@ final class UserAdminController extends AbstractController
         $username = $request->query->get('username');
         $email = $request->query->get('email');
         $ageParam = $request->query->get('age');
-        $age = is_numeric($ageParam) ? (int)$ageParam : null;
+        $age = is_numeric($ageParam) ? (int) $ageParam : null;
         $sortField = $request->query->get('sortField');
         $sortDirection = $request->query->get('sortDirection', 'asc');
 
@@ -100,11 +101,10 @@ final class UserAdminController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }

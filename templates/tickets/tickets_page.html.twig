@@ -1,0 +1,43 @@
+{% extends 'base_booking.html.twig' %}
+
+{% block title %}Tickets Page{% endblock %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto mt-10 px-4">
+        <h1 class="text-4xl font-bold mb-6 text-center">Your Tickets</h1>
+
+        {% if bookings is not empty %}
+            <div class="grid gap-6">
+                {% for booking in bookings %}
+                    <div
+                        class="bg-base-100 p-6 rounded-xl shadow-md border border-base-300 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-accent mb-2">
+                                {{ booking.festival.name }}
+                            </h2>
+                            <p class="text-sm text-gray-500 mb-1">
+                                <strong>Start Date:</strong> {{ booking.festival.startDate|date('d-m-Y') }}
+                            </p>
+                            <p class="text-sm text-gray-500 mb-1">
+                                <strong>End Date:</strong> {{ booking.festival.endDate|date('d-m-Y') }}
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                <strong>Booking ID:</strong> {{ booking.id }}
+                            </p>
+                        </div>
+
+                        <div class="ml-4">
+                            <a href="{{ path('app_ticket_show', { 'id': booking.id }) }}" class="btn btn-primary">
+                                Show Ticket
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center text-lg text-gray-500 mt-12">
+                You don't have any tickets yet.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

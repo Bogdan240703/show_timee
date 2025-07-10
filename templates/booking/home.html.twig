@@ -3,11 +3,63 @@
 {% block title %}Booking page{% endblock %}
 
 {% block content %}
-    <div class="flex justify-center mt-4">
+    <div data-controller="scroll-on-search">
+        <div class="relative h-screen w-full overflow-hidden">
+            <video autoplay muted loop playsinline
+                   class="absolute inset-0 w-full h-full object-cover z-0">
+                <source src="{{ asset('videos/festival2.mp4') }}" type="video/mp4">
+                Videoul nu se incarca.
+            </video>
+
+
+            <div class="relative z-20 flex flex-col items-center h-full text-center px-4 text-white mt-50">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-accent mb-4">
+                    Welcome to ShowTime
+                </h1>
+
+                <p class="text-xl md:text-2xl font-medium text-accent mb-10">
+                    We made it easier for you. All festivals in one place.
+                </p>
+
+                <button onclick="document.getElementById('festival-section').scrollIntoView({ behavior: 'smooth' });"
+                        class="btn btn-accent mb-4">
+                    {% if not app.user %}
+                        View Available Festivals as Guest
+                    {% elseif app.user %}
+                        View Available Festivals
+                    {% endif %}
+                </button>
+
+                {% if not app.user %}
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">
+                        Login/Register to Access All Functionalities
+                    </a>
+                {% endif %}
+
+                <form action="{{ path('app_booking_index') }}" method="get" class="mt-6 w-full max-w-md">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search for a festival by name"
+                        class="input input-bordered w-full rounded-full text-black bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+                    />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="festival-section" class="flex justify-center mt-4">
         <div class="w-[1000px]">
             <div class="flex items-baseline gap-4 mb-4">
                 <div class="status status-error animate-bounce w-3.5 h-3.5"></div>
-                <h1 class="text-4xl font-bold">All available festivals!</h1>
+                <div class="flex flex-col">
+                    <h1 class="text-4xl font-bold">All available festivals!</h1>
+                    {% if queryp == 'true' %}
+                        <a href="{{ path('app_booking_index') }}" class="link link-accent text-sm mt-1">
+                            Remove filters
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="overflow-x-auto">
@@ -100,8 +152,5 @@
             </div>
         </div>
     </div>
-
-
-
-
 {% endblock %}
+

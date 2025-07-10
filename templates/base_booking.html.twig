@@ -47,23 +47,43 @@
 
         <div class="drawer-side z-40">
             <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-            <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                {% if app.user %}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li><a href="{{ path('app_band_index') }}">Bands</a></li>
-                        <li><a href="{{ path('app_festival_index') }}">Festivals</a></li>
-                        <li><a href="{{ path('app_booking_index_admin') }}">Bookings</a></li>
-                        <li><a href="{{ path('app_user_index') }}">Users</a></li>
+            <div class="bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col justify-between">
+                <div class="space-y-4">
+                    {% if app.user %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_band_index') }}"
+                               class="block text-lg font-semibold hover:text-accent">Bands</a>
+                            <a href="{{ path('app_festival_index') }}"
+                               class="block text-lg font-semibold hover:text-accent">Festivals</a>
+                            <a href="{{ path('app_booking_index_admin') }}"
+                               class="block text-lg font-semibold hover:text-accent">Bookings</a>
+                            <a href="{{ path('app_user_index') }}"
+                               class="block text-lg font-semibold hover:text-accent">Users</a>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <li><a href="{{ path('app_booking_index') }}">Home Page</a></li>
-                {% if not app.user %}
-                    <li><a href="{{ path('app_register') }}">Register</a></li>
-                {% endif %}
+
+                    <a href="{{ path('app_booking_index') }}"
+                       class="block font-semibold text-lg mt-6 hover:text-accent">
+                        Home Page
+                    </a>
+                    {% if app.user %}
+                        <a href="{{ path('app_tickets_page') }}"
+                           class="block font-semibold text-lg mt-6 hover:text-accent">
+                            Your Tickets
+                        </a>
+                    {% endif %}
+                    {% if not app.user %}
+                        <a href="{{ path('app_register') }}"
+                           class="block text-xl font-semibold hover:text-accent">Register</a>
+                    {% endif %}
+                </div>
+
                 {% if app.user %}
-                    <li><a href="{{ path('app_logout') }}">Logout</a></li>
+                    <a href="{{ path('app_logout') }}" class="block text-lg font-semibold hover:text-red-500 mt-6">
+                        Logout
+                    </a>
                 {% endif %}
-            </ul>
+            </div>
         </div>
     </div>
 </div>

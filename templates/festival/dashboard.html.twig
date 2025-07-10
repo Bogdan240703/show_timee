@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Festival{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center pb-50 px-4">
+        <div class="card bg-base-120 w-full max-w-6xl shadow-sm">
+            <div class="card-body">
+
+                <h2 class="text-3xl font-bold text-center mb-6">Dashboard for {{ festival.name }}!</h2>
+
+                <h3 class="text-xl font-semibold mb-4">Details about festival</h3>
+
+                <div class="flex flex-wrap gap-8 mb-10">
+                    <div class="stat flex-1 min-w-[180px] shadow p-6 rounded-lg">
+                        <div class="stat-title text-lg font-semibold mb-2">Nr of sold tickets</div>
+                        <div class="stat-value text-4xl font-bold">{{ nrOfTickets }}</div>
+                    </div>
+
+                    <div class="stat flex-1 min-w-[180px] shadow p-6 rounded-lg">
+                        <div class="stat-title text-lg font-semibold mb-2">Revenue</div>
+                        <div class="stat-value text-4xl font-bold">{{ nrOfTickets * festival.price }}$</div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-4">Age distribution for registered users</h3>
+
+                <div class="flex justify-between gap-6 flex-wrap">
+                    {% set labels = ['14–18', '18–22', '22–26', '26–30', '30–40', '40+'] %}
+                    {% for i in 0..5 %}
+                        <div class="flex flex-col items-center gap-3 min-w-[90px]">
+                            <span class="font-medium text-base">{{ labels[i] }}</span>
+                            <div class="radial-progress text-primary" style="--value:{{ ageGroups[i] }};"
+                                 role="progressbar" aria-valuenow="{{ ageGroups[i] }}">
+                                {{ ageGroups[i] }}%
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="flex justify-center gap-4 mt-10">
+                    <a href="{{ path('app_festival_index') }}" class="btn btn-info">Back to list</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

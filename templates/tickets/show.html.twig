@@ -1,0 +1,28 @@
+{% extends 'base_booking.html.twig' %}
+
+{% block title %}Ticket Details{% endblock %}
+
+{% block content %}
+    <div class="max-w-2xl mx-auto mt-16 px-4 text-center">
+        <h1 class="text-4xl font-bold mb-6 text-accent">Your Ticket</h1>
+
+        <div class="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300">
+            <h2 class="text-2xl font-semibold text-primary mb-4">{{ booking.festival.name }}</h2>
+
+            <p class="text-md mb-2">
+                <strong>Start Date:</strong> {{ booking.festival.startDate|date('d-m-Y') }}
+            </p>
+            <p class="text-md mb-2">
+                <strong>End Date:</strong> {{ booking.festival.endDate|date('d-m-Y') }}
+            </p>
+            <p class="text-md mb-2">
+                <strong>Booking ID:</strong> {{ booking.id }}
+            </p>
+            <p class="text-md mb-6 text-warning font-semibold">
+                Present this ticket at the entrance to the festival.
+            </p>
+
+            <a href="{{ path('app_tickets_page') }}" class="btn btn-accent"><- Back to My Tickets</a>
+        </div>
+    </div>
+{% endblock %}

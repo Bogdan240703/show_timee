@@ -9,25 +9,71 @@ use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use App\Repository\FestivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/booking')]
 final class BookingController extends AbstractController
 {
-    #[Route('/booking', name: 'app_booking_index', methods: ['GET'])]
-    public function index(BookingRepository $bookingRepository, FestivalRepository $festivalRepository): Response
+    #[Route(name: 'app_booking_index', methods: ['GET'])]
+    public function index(BookingRepository $bookingRepository, FestivalRepository $festivalRepository, Request $request): Response
     {
+        $search = $request->query->get('search');
+        $qb = $festivalRepository->findByFilters(
+            $search,
+            null,   // location
+            null,   // startDate
+            null,   // endDate
+            null,   // sortField
+            'ASC'   // sortDirection (default to ASC)
+        );
+        $hasSearch = $request->query->has('search');
+        $queryp = 'false';
+        if ($hasSearch) {
+            $queryp = 'true';
+        } else {
+            $queryp = 'false';
+        }
+        $festivals = $qb->getQuery()->getResult();
+
         return $this->render('booking/home.html.twig', [
             'bookings' => $bookingRepository->findAll(),
-            'festivals' => $festivalRepository->findAll(),
+            'festivals' => $festivals,
+            'queryp' => $queryp,
         ]);
     }
 
-    #[Route('/booking/wishlist', name: 'app_wishlist_page', methods: ['GET'])]
+    #[Route('/tickets', name: 'app_tickets_page', methods: ['GET'])]
+    public function tickets(BookingRepository $bookingRepository): Response
+    {
+        $user = $this->getUser();
+        $bookings = $bookingRepository->findByUser($user);
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to view your tickets.');
+        }
+
+        return $this->render('tickets/tickets_page.html.twig', [
+            'bookings' => $bookings,
+        ]);
+    }
+
+    #[Route('/ticket/{id}', name: 'app_ticket_show', methods: ['GET'])]
+    public function showTicket(Booking $booking): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to view your tickets.');
+        }
+
+        return $this->render('tickets/show.html.twig', [
+            'booking' => $booking,
+        ]);
+    }
+
+    #[Route('/wishlist', name: 'app_wishlist_page', methods: ['GET'])]
     public function wishlist(BookingRepository $bookingRepository, FestivalRepository $festivalRepository): Response
     {
         return $this->render('booking/wishlist_page.html.twig', [
@@ -36,7 +82,7 @@ final class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/booking/wishlist/toggle/{id}', name: 'app_wishlist_toggle')]
+    #[Route('/wishlist/toggle/{id}', name: 'app_wishlist_toggle')]
     public function toggleWishlist(Festival $festival, EntityManagerInterface $em, Security $security): Response
     {
         $user = $security->getUser();
@@ -56,7 +102,7 @@ final class BookingController extends AbstractController
         return $this->redirectToRoute('app_booking_index');
     }
 
-    #[Route('/booking/wishlist/page/toggle/{id}', name: 'app_wishlist_page_toggle')]
+    #[Route('/wishlist/page/toggle/{id}', name: 'app_wishlist_page_toggle')]
     public function toggleWishlistPage(Festival $festival, EntityManagerInterface $em, Security $security): Response
     {
         $user = $security->getUser();
@@ -76,89 +122,8 @@ final class BookingController extends AbstractController
         return $this->redirectToRoute('app_wishlist_page');
     }
 
-    #[Route('/admin/booking', name: 'app_booking_index_admin', methods: ['GET'])]
-    public function admin_index(Request $request, BookingRepository $bookingRepository, PaginatorInterface $paginator): Response
-    {
-        $festivalName = $request->get('festivalName');
-        $email = $request->get('email');
-        $fullName = $request->get('fullName');
-        $sortField = $request->query->get('sortField', 'id');
-        $sortDirection = $request->query->get('sortDirection', 'asc');
-
-        $queryBuilder = $bookingRepository->findByFilters(
-            $festivalName,
-            $email,
-            $fullName,
-            $sortField,
-            $sortDirection
-        );
-
-        $pagination = $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            4 // Items per page
-        );
-        return $this->render('booking/index.html.twig', [
-            'pagination' => $pagination,
-            'filters' => [
-                'festivalName' => $festivalName,
-                'email' => $email,
-                'fullName' => $fullName,
-                'sortField' => $sortField,
-                'sortDirection' => $sortDirection,
-            ],
-        ]);
-    }
-
-    #[Route('/admin/booking/new', name: 'app_booking_new_admin', methods: ['GET', 'POST'])]
-    public function new_admin(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $booking = new Booking();
-
-        $form = $this->createForm(BookingType::class, $booking, ['mode' => 'detailed']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($booking);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_booking_index_admin', ['id' => $booking->getId()], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('/booking/new_booking_admin.html.twig', [
-            'booking' => $booking,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/admin/booking/{id}', name: 'app_booking_show_admin', methods: ['GET'])]
-    public function show(Booking $booking): Response
-    {
-        return $this->render('booking/show_admin.html.twig', [
-            'booking' => $booking,
-        ]);
-    }
-
-    #[Route('/admin/booking/{id}/edit', name: 'app_booking_edit_admin', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(BookingType::class, $booking, ['mode' => 'detailed']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_booking_index_admin', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('booking/edit_admin.html.twig', [
-            'booking' => $booking,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/booking/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $festivalId = $request->query->get('festivalId');
 
@@ -168,6 +133,10 @@ final class BookingController extends AbstractController
             if ($festival) {
                 $booking->setFestival($festival);
             }
+        }
+        $user = $security->getUser();
+        if ($user) {
+            $booking->setUser($user);
         }
         $form = $this->createForm(BookingType::class, $booking, ['mode' => 'quick']);
         $form->handleRequest($request);
@@ -185,13 +154,14 @@ final class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/booking/completed/{id}', name: 'app_booking_completed', methods: ['GET'])]
+    #[Route('/completed/{id}', name: 'app_booking_completed', methods: ['GET'])]
     public function completed(Booking $booking): Response
     {
         return $this->render('booking/booking_confirmation.html.twig', ['booking' => $booking]);
     }
 
-    #[Route('/booking/{id}', name: 'app_booking_delete', methods: ['POST'])]
+
+    #[Route('/{id}', name: 'app_booking_delete', methods: ['POST'])]
     public function delete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->getPayload()->getString('_token'))) {

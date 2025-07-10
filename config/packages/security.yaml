@@ -22,9 +22,10 @@ security:
                 check_path: app_login
                 #username_parameter: email
                 #password_parameter: password
-                default_target_path: app_booking_index_admin
+                default_target_path: app_booking_index
                 enable_csrf: true
                 csrf_token_id: auth_token
+            access_denied_handler: App\Security\AccessDeniedHandler
             logout:
                 path: app_logout
                 # where to redirect after logout

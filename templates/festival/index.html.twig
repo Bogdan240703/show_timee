@@ -113,6 +113,9 @@
                             <td>
                                 <a href="{{ path('app_festival_show', {'id': festival.id}) }}" class="btn">Show</a>
                                 <a href="{{ path('app_festival_edit', {'id': festival.id}) }}" class="btn">Edit</a>
+                                <a href="{{ path('app_festival_dashboard', {'id': festival.id}) }}"
+                                   class="btn btn-accent">View
+                                    Stats</a>
                             </td>
                         </tr>
                     {% else %}

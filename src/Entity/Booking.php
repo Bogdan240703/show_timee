@@ -22,6 +22,20 @@ class Booking
 
     #[ORM\Column(length: 255)]
     private ?string $fullname = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     public function getId(): ?int
     {
